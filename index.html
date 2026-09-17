@@ -214,6 +214,7 @@
     <nav class="links">
       <a href="#what">Problem</a>
       <a href="#files">Files</a>
+      <a href="#owners">Owners</a>
       <a href="#scoring">Scoring</a>
       <a href="#models">Routing</a>
       <a href="#governance">Governance</a>
@@ -230,11 +231,11 @@
     <h1>CPOS — the Claude Project Operating System</h1>
     <p class="lede">One standard, many projects. CPOS is how a single person keeps a growing pile of AI-assisted projects honest, current, and easy to pick back up — without re-explaining the same context every session, and without one project's fix quietly failing to reach its siblings.</p>
     <div class="readout mono">
-      <span><b>v2.1</b> current spec</span>
+      <span><b>v2.2</b> current spec</span>
       <span class="sep">·</span>
-      <span><b>9</b> projects governed</span>
+      <span><b>11</b> projects governed</span>
       <span class="sep">·</span>
-      <span><b>86%</b> avg. compliance</span>
+      <span><b>93%</b> avg. compliance</span>
     </div>
   </section>
 
@@ -282,6 +283,26 @@
       </div>
     </div>
     <p class="note">Other files — TODO.md, ROADMAP.md, a memory log — get added only once a project's real work earns them. Nothing is scaffolded on the chance it might be useful someday.</p>
+  </section>
+
+  <section class="wrap" id="owners">
+    <h2>More than one person, one standard</h2>
+    <p>CPOS assumes a single operator by default — but doesn't require one. A household, a family, or a friend group sharing one machine can run the same standard across everyone's projects, while keeping each person's work clearly, separately theirs.</p>
+    <div class="grid-2">
+      <div class="card">
+        <h3>Owner</h3>
+        <p>Every project has one. It defaults to the primary operator, so the common case — one person, their own projects — needs no extra bookkeeping. It's only stated explicitly when a project belongs to someone else.</p>
+      </div>
+      <div class="card">
+        <h3>Base Folder</h3>
+        <p>A registered folder that's a <em>container</em> for another person's projects, not a project of its own. It gets scanned one level deep during discovery — a folder full of someone else's real work is exactly what a top-level-only sweep would otherwise never see.</p>
+      </div>
+    </div>
+    <p class="note">A Base Folder can carry its own rules — credential routing, conventions specific to that person's setup — in its own CLAUDE.md. That file sits <em>alongside</em>, never instead of, each project's own governance files inside it; the two are independent.</p>
+    <div class="flag">
+      <span class="glyph mono">!</span>
+      <p>Sharing a folder never implies shared governance. Bringing someone else's projects under the standard is a decision the primary operator makes and records explicitly — never something that follows automatically just because the folder exists.</p>
+    </div>
   </section>
 
   <section class="wrap" id="scoring">
@@ -366,40 +387,48 @@
 
     <div class="stat-row">
       <div class="stat card">
-        <div class="num">9</div>
+        <div class="num">11</div>
         <div class="label">registered projects</div>
       </div>
       <div class="stat card">
-        <div class="num">86%</div>
+        <div class="num">93%</div>
         <div class="label">avg. compliance score</div>
       </div>
       <div class="stat card">
-        <div class="num">9 / 9</div>
+        <div class="num">11 / 11</div>
         <div class="label">on the current standard version</div>
       </div>
     </div>
 
+    <h3 style="margin-top:34px;">By owner</h3>
+    <div class="bars">
+      <div class="bar-row"><span class="name">Primary operator</span><span class="bar-track"><span class="bar-fill" style="width:81.8%"></span></span><span class="val">9</span></div>
+      <div class="bar-row"><span class="name">Household member</span><span class="bar-track"><span class="bar-fill" style="width:18.2%"></span></span><span class="val">2</span></div>
+    </div>
+    <p class="note">The 2 are a family member's own projects, living under a registered Base Folder — scored on exactly the same rubric as everything else, not a separate track.</p>
+
     <h3 style="margin-top:34px;">What the portfolio is made of</h3>
     <div class="bars">
-      <div class="bar-row"><span class="name">eCommerce brands</span><span class="bar-track"><span class="bar-fill" style="width:22.2%"></span></span><span class="val">2</span></div>
-      <div class="bar-row"><span class="name">Mobile app + growth</span><span class="bar-track"><span class="bar-fill" style="width:22.2%"></span></span><span class="val">2</span></div>
-      <div class="bar-row"><span class="name">Education content</span><span class="bar-track"><span class="bar-fill" style="width:11.1%"></span></span><span class="val">1</span></div>
-      <div class="bar-row"><span class="name">Video/content brand</span><span class="bar-track"><span class="bar-fill" style="width:11.1%"></span></span><span class="val">1</span></div>
-      <div class="bar-row"><span class="name">Software in development</span><span class="bar-track"><span class="bar-fill" style="width:11.1%"></span></span><span class="val">1</span></div>
-      <div class="bar-row"><span class="name">Personal tool</span><span class="bar-track"><span class="bar-fill" style="width:11.1%"></span></span><span class="val">1</span></div>
-      <div class="bar-row"><span class="name">Undefined, pending a call</span><span class="bar-track"><span class="bar-fill" style="width:11.1%"></span></span><span class="val">1</span></div>
+      <div class="bar-row"><span class="name">eCommerce brands</span><span class="bar-track"><span class="bar-fill" style="width:18.2%"></span></span><span class="val">2</span></div>
+      <div class="bar-row"><span class="name">Mobile app + growth</span><span class="bar-track"><span class="bar-fill" style="width:18.2%"></span></span><span class="val">2</span></div>
+      <div class="bar-row"><span class="name">Software in development</span><span class="bar-track"><span class="bar-fill" style="width:18.2%"></span></span><span class="val">2</span></div>
+      <div class="bar-row"><span class="name">Education content</span><span class="bar-track"><span class="bar-fill" style="width:9.1%"></span></span><span class="val">1</span></div>
+      <div class="bar-row"><span class="name">Video/content brand</span><span class="bar-track"><span class="bar-fill" style="width:9.1%"></span></span><span class="val">1</span></div>
+      <div class="bar-row"><span class="name">Personal tool</span><span class="bar-track"><span class="bar-fill" style="width:9.1%"></span></span><span class="val">1</span></div>
+      <div class="bar-row"><span class="name">Personal/family project</span><span class="bar-track"><span class="bar-fill" style="width:9.1%"></span></span><span class="val">1</span></div>
+      <div class="bar-row"><span class="name">Undefined, pending a call</span><span class="bar-track"><span class="bar-fill" style="width:9.1%"></span></span><span class="val">1</span></div>
     </div>
 
     <h3 style="margin-top:34px;">Average health, by dimension (out of 10)</h3>
     <div class="bars">
-      <div class="bar-row"><span class="name">Compliance</span><span class="bar-track"><span class="bar-fill" style="width:85.6%"></span></span><span class="val">8.6</span></div>
-      <div class="bar-row"><span class="name">Documentation</span><span class="bar-track"><span class="bar-fill" style="width:74.4%"></span></span><span class="val">7.4</span></div>
-      <div class="bar-row"><span class="name">Repo organization</span><span class="bar-track"><span class="bar-fill" style="width:73.3%"></span></span><span class="val">7.3</span></div>
-      <div class="bar-row"><span class="name">Technical debt</span><span class="bar-track"><span class="bar-fill" style="width:73.3%"></span></span><span class="val">7.3</span></div>
-      <div class="bar-row"><span class="name">Decision tracking</span><span class="bar-track"><span class="bar-fill" style="width:71.1%"></span></span><span class="val">7.1</span></div>
-      <div class="bar-row"><span class="name">Outstanding tasks</span><span class="bar-track"><span class="bar-fill" style="width:66.7%"></span></span><span class="val">6.7</span></div>
+      <div class="bar-row"><span class="name">Compliance</span><span class="bar-track"><span class="bar-fill" style="width:92.7%"></span></span><span class="val">9.3</span></div>
+      <div class="bar-row"><span class="name">Documentation</span><span class="bar-track"><span class="bar-fill" style="width:80%"></span></span><span class="val">8.0</span></div>
+      <div class="bar-row"><span class="name">Technical debt</span><span class="bar-track"><span class="bar-fill" style="width:78.2%"></span></span><span class="val">7.8</span></div>
+      <div class="bar-row"><span class="name">Decision tracking</span><span class="bar-track"><span class="bar-fill" style="width:77.3%"></span></span><span class="val">7.7</span></div>
+      <div class="bar-row"><span class="name">Repo organization</span><span class="bar-track"><span class="bar-fill" style="width:77.3%"></span></span><span class="val">7.7</span></div>
+      <div class="bar-row"><span class="name">Outstanding tasks</span><span class="bar-track"><span class="bar-fill" style="width:72.7%"></span></span><span class="val">7.3</span></div>
     </div>
-    <p class="note">These numbers are the actual average across the current portfolio, not a cherry-picked example. Outstanding tasks is the weakest dimension — a few projects are missing a clear next step, which is exactly the kind of thing a monthly audit exists to surface rather than let drift indefinitely.</p>
+    <p class="note">These numbers are the actual average across the current portfolio, not a cherry-picked example. Outstanding tasks is still the weakest dimension, same as the last time these numbers were published — a few projects are missing a clear next step, which is exactly the kind of thing a monthly audit exists to surface rather than let drift indefinitely.</p>
 
     <div class="flag">
       <span class="glyph mono">✓</span>
