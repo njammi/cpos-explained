@@ -218,6 +218,7 @@
       <a href="#scoring">Scoring</a>
       <a href="#models">Routing</a>
       <a href="#governance">Governance</a>
+      <a href="#using-it">Using it</a>
       <a href="#case-study">In practice</a>
     </nav>
     <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">◐</button>
@@ -381,6 +382,42 @@
     </div>
   </section>
 
+  <section class="wrap" id="using-it">
+    <h2>Using it yourself</h2>
+    <p>Everything above describes what CPOS <em>is</em>. This part is what you actually do — the two things that come up constantly once a workspace like this exists: adding a new project, and, if it applies, bringing another person's folder into scope.</p>
+
+    <div class="grid-2">
+      <div class="card">
+        <h3>Starting from nothing</h3>
+        <ol class="steps">
+          <li>Scaffold a thin CLAUDE.md — the mission in a sentence or two, a reference to the standard, and only what's specific to this project.</li>
+          <li>Write a tailored PERSONA.md — the expertise and voice this project actually needs. Not a generic assistant; a specific one.</li>
+          <li>Register it the same day — name, path, status, current milestone, persona, and a starting compliance score.</li>
+          <li>Stop there. WORKSPACE.md, DECISIONS.md, and everything else earn their place later — don't scaffold them empty on the chance they'll be useful.</li>
+        </ol>
+      </div>
+      <div class="card">
+        <h3>Bringing in something that already exists</h3>
+        <ol class="steps">
+          <li>Survey it first — what it is, what docs already exist, whether the root is clean, anything that looks like a secret. Flag a possible secret immediately; don't wait until the survey is "done."</li>
+          <li>Register it right away. Registration puts it in scope — full compliance comes after, not before.</li>
+          <li>Score it honestly. Mark anything you can't verify as "to confirm" instead of guessing at it.</li>
+          <li>Add whatever the compliance checklist flags as missing, without touching what the project already got right.</li>
+        </ol>
+      </div>
+    </div>
+
+    <h3 style="margin-top:34px;">Registering another person's base folder</h3>
+    <p>This only applies if you're sharing the workspace with someone else (§ Owners, above). The steps:</p>
+    <ol class="steps">
+      <li>Add a row to the Owners table: who they are, their folder's path, and anything specific to their setup — a separate account, their own conventions.</li>
+      <li>Register that folder as a <strong>Base Folder</strong>, not a project. From then on it's scanned one level deep, specifically so a real project living inside it doesn't stay invisible to a top-level-only sweep.</li>
+      <li>Decide governance on purpose. A folder existing doesn't put anything inside it in scope by itself — that's a separate, explicit call, made and recorded the same way any other onboarding decision is.</li>
+      <li>Once something inside is approved, register it like any other project — with one addition: an explicit Owner field pointing back to the table, so it's always clear whose it is.</li>
+    </ol>
+    <p class="note">Worth testing this on a throwaway folder before trusting it: register a Base Folder with one placeholder project inside, then run the discovery sweep and confirm two things — that it actually finds the placeholder, and that it does <em>not</em> get registered on its own. Both matter equally.</p>
+  </section>
+
   <section class="wrap" id="case-study">
     <h2>In practice</h2>
     <p>This isn't a hypothetical framework — it's running against a real, messy portfolio right now. The categories below are real; the project names aren't, since some of this is client and business work that stays private.</p>
@@ -405,6 +442,7 @@
       <div class="bar-row"><span class="name">Primary operator</span><span class="bar-track"><span class="bar-fill" style="width:81.8%"></span></span><span class="val">9</span></div>
       <div class="bar-row"><span class="name">Household member</span><span class="bar-track"><span class="bar-fill" style="width:18.2%"></span></span><span class="val">2</span></div>
     </div>
+    <p class="note">The Base Folder mechanism above isn't just described — it's been tested. A throwaway Base Folder with one placeholder project inside confirmed both halves of the promise: the sweep found the placeholder on its own, and it stayed unregistered until someone actually decided otherwise.</p>
     <p class="note">The 2 are a family member's own projects, living under a registered Base Folder — scored on exactly the same rubric as everything else, not a separate track.</p>
 
     <h3 style="margin-top:34px;">What the portfolio is made of</h3>
