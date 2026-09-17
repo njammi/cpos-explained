@@ -5,164 +5,217 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>CPOS — Claude Project Operating System</title>
 <meta name="description" content="CPOS is a governance system for running many AI-assisted projects at once, without losing consistency or re-learning the same lessons twice.">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700;800&family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600&display=swap">
 <style>
   :root {
     color-scheme: light;
-    --page:        #f9f9f7;
-    --surface:     #fcfcfb;
-    --ink:         #0b0b0b;
-    --ink-2:       #52514e;
-    --ink-muted:   #898781;
-    --grid:        #e1e0d9;
-    --border:      rgba(11,11,11,0.10);
-    --accent:      #2a78d6;
-    --accent-wash: #e9f1fb;
-    --good:        #0ca30c;
+    --page:        #eef1f7;
+    --paper:       #ffffff;
+    --ink:         #101b30;
+    --ink-2:       #3c4a68;
+    --muted:       #6b7690;
+    --border:      rgba(16,27,48,0.15);
+    --grid-line:   rgba(16,27,48,0.06);
+    --accent:      #1c5bb0;
+    --accent-ink:  #ffffff;
+    --accent-soft: #dde8f8;
+    --warn:        #a83f21;
+    --warn-soft:   #f6e2da;
   }
   @media (prefers-color-scheme: dark) {
     :root:not([data-theme="light"]) {
       color-scheme: dark;
-      --page:        #0d0d0d;
-      --surface:     #1a1a19;
-      --ink:         #ffffff;
-      --ink-2:       #c3c2b7;
-      --ink-muted:   #898781;
-      --grid:        #2c2c2a;
-      --border:      rgba(255,255,255,0.10);
-      --accent:      #3987e5;
-      --accent-wash: #142334;
-      --good:        #0ca30c;
+      --page:        #0a0f1c;
+      --paper:       #121a2c;
+      --ink:         #eef2fa;
+      --ink-2:       #b7c2dc;
+      --muted:       #7c88a6;
+      --border:      rgba(255,255,255,0.14);
+      --grid-line:   rgba(255,255,255,0.055);
+      --accent:      #6fa4e8;
+      --accent-ink:  #071224;
+      --accent-soft: #16233c;
+      --warn:        #e2795a;
+      --warn-soft:   #2c1b16;
     }
   }
   :root[data-theme="dark"] {
     color-scheme: dark;
-    --page:        #0d0d0d;
-    --surface:     #1a1a19;
-    --ink:         #ffffff;
-    --ink-2:       #c3c2b7;
-    --ink-muted:   #898781;
-    --grid:        #2c2c2a;
-    --border:      rgba(255,255,255,0.10);
-    --accent:      #3987e5;
-    --accent-wash: #142334;
-    --good:        #0ca30c;
+    --page:        #0a0f1c;
+    --paper:       #121a2c;
+    --ink:         #eef2fa;
+    --ink-2:       #b7c2dc;
+    --muted:       #7c88a6;
+    --border:      rgba(255,255,255,0.14);
+    --grid-line:   rgba(255,255,255,0.055);
+    --accent:      #6fa4e8;
+    --accent-ink:  #071224;
+    --accent-soft: #16233c;
+    --warn:        #e2795a;
+    --warn-soft:   #2c1b16;
   }
 
   * { box-sizing: border-box; }
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+
   body {
     margin: 0;
-    background: var(--page);
+    background-color: var(--page);
+    background-image:
+      linear-gradient(var(--grid-line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+    background-size: 30px 30px;
+    background-attachment: fixed;
     color: var(--ink);
-    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
-    line-height: 1.55;
+    font-family: "Source Serif 4", Georgia, "Times New Roman", serif;
+    font-size: 17px;
+    line-height: 1.6;
   }
   img { max-width: 100%; }
-  a { color: var(--accent); }
+  a { color: var(--accent); text-underline-offset: 2px; }
 
-  .wrap { max-width: 880px; margin: 0 auto; padding-inline: 20px; }
+  .mono { font-family: "JetBrains Mono", ui-monospace, "SF Mono", Consolas, monospace; }
 
+  .wrap { max-width: 860px; margin: 0 auto; padding-inline: 20px; }
+
+  /* ---------- spec-tag: the one reusable badge, used for file names, version, tiers ---------- */
+  .spec-tag {
+    display: inline-flex; align-items: center; gap: 5px;
+    font-family: "JetBrains Mono", monospace; font-size: 11.5px; font-weight: 600;
+    letter-spacing: 0.04em; text-transform: uppercase;
+    color: var(--accent); background: var(--accent-soft);
+    border: 1px solid var(--border); border-radius: 4px; padding: 3px 8px;
+  }
+  .spec-tag.warn { color: var(--warn); background: var(--warn-soft); }
+
+  /* ---------- header ---------- */
   header.top {
     position: sticky; top: 0; z-index: 10;
-    background: color-mix(in srgb, var(--page) 88%, transparent);
-    backdrop-filter: blur(6px);
+    background: color-mix(in srgb, var(--page) 90%, transparent);
+    backdrop-filter: blur(8px);
     border-bottom: 1px solid var(--border);
   }
   header.top .wrap {
-    display: flex; align-items: center; justify-content: space-between;
-    padding-block: 14px;
+    display: flex; align-items: center; justify-content: space-between; gap: 16px;
+    padding-block: 13px;
   }
-  .brand { font-weight: 700; letter-spacing: 0.02em; }
-  nav.links { display: flex; gap: 18px; font-size: 14px; }
-  nav.links a { color: var(--ink-2); text-decoration: none; }
+  .brand {
+    font-family: "JetBrains Mono", monospace; font-weight: 800; letter-spacing: 0.02em;
+    font-size: 15px; color: var(--ink); display: flex; align-items: center; gap: 8px;
+  }
+  .brand .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--accent); }
+  nav.links { display: flex; gap: 20px; font-size: 13.5px; font-family: "JetBrains Mono", monospace; }
+  nav.links a { color: var(--muted); text-decoration: none; }
   nav.links a:hover { color: var(--ink); }
+  @media (max-width: 700px) { nav.links { display: none; } }
   .theme-toggle {
-    border: 1px solid var(--border); background: var(--surface); color: var(--ink);
-    border-radius: 999px; width: 32px; height: 32px; cursor: pointer; font-size: 15px;
-    display: flex; align-items: center; justify-content: center;
+    border: 1px solid var(--border); background: var(--paper); color: var(--ink);
+    border-radius: 6px; width: 30px; height: 30px; cursor: pointer; font-size: 14px;
+    display: flex; align-items: center; justify-content: center; flex: none;
   }
 
-  main { padding-bottom: 64px; }
-
-  section { padding-block: 56px; border-bottom: 1px solid var(--border); }
-  section:last-of-type { border-bottom: none; }
+  main { padding-bottom: 60px; }
+  section { padding-block: 52px; border-top: 1px solid var(--border); }
+  section:first-of-type { border-top: none; }
 
   .eyebrow {
-    text-transform: uppercase; letter-spacing: 0.08em; font-size: 12px;
-    color: var(--ink-muted); font-weight: 600; margin: 0 0 10px;
+    font-family: "JetBrains Mono", monospace; text-transform: uppercase; letter-spacing: 0.09em;
+    font-size: 12px; color: var(--muted); font-weight: 600; margin: 0 0 12px;
   }
-  h1 { font-size: clamp(28px, 5vw, 42px); line-height: 1.15; margin: 0 0 16px; }
-  h2 { font-size: clamp(22px, 3.5vw, 28px); margin: 0 0 12px; }
-  h3 { font-size: 17px; margin: 0 0 6px; }
-  p.lede { font-size: 18px; color: var(--ink-2); max-width: 640px; }
-  p { color: var(--ink-2); }
-  .stack { display: grid; gap: 14px; }
+  h1, h2, h3 { font-family: "JetBrains Mono", monospace; text-wrap: balance; color: var(--ink); }
+  h1 { font-size: clamp(28px, 5vw, 44px); font-weight: 800; line-height: 1.1; margin: 0 0 18px; letter-spacing: -0.01em; }
+  h2 { font-size: clamp(21px, 3.2vw, 26px); font-weight: 700; margin: 0 0 14px; }
+  h3 { font-size: 15px; font-weight: 700; margin: 0 0 8px; letter-spacing: 0.01em; }
+  p.lede { font-size: 19px; color: var(--ink-2); max-width: 62ch; margin: 0 0 22px; }
+  p { color: var(--ink-2); max-width: 68ch; }
+  .measure-wide p { max-width: none; }
+
+  /* hero readout strip */
+  .readout {
+    display: inline-flex; flex-wrap: wrap; gap: 10px 18px; align-items: center;
+    font-family: "JetBrains Mono", monospace; font-size: 13px; color: var(--ink-2);
+    border: 1px solid var(--border); border-radius: 8px; padding: 12px 16px;
+    background: var(--paper);
+  }
+  .readout b { color: var(--accent); font-weight: 700; }
+  .readout .sep { color: var(--border); }
 
   .card {
-    background: var(--surface); border: 1px solid var(--border);
-    border-radius: 10px; padding: 18px 20px;
+    background: var(--paper); border: 1px solid var(--border);
+    border-radius: 8px; padding: 20px 22px;
   }
   .grid-2 { display: grid; gap: 14px; grid-template-columns: repeat(2, 1fr); }
-  .grid-4 { display: grid; gap: 14px; grid-template-columns: repeat(4, 1fr); }
-  @media (max-width: 640px) {
-    .grid-2, .grid-4 { grid-template-columns: 1fr; }
-  }
+  .grid-3 { display: grid; gap: 14px; grid-template-columns: repeat(3, 1fr); }
+  @media (max-width: 680px) { .grid-2, .grid-3 { grid-template-columns: 1fr; } }
 
-  .file-card .tag {
-    display: inline-block; font-family: ui-monospace, "SF Mono", Consolas, monospace;
-    font-size: 12px; color: var(--accent); background: var(--accent-wash);
-    padding: 3px 8px; border-radius: 5px; margin-bottom: 8px;
-  }
+  .file-card { border-left: 3px solid var(--accent); border-radius: 4px 8px 8px 4px; }
+  .file-card .spec-tag { margin-bottom: 10px; }
 
-  ol.steps, ul.checklist { margin: 0; padding-left: 0; list-style: none; display: grid; gap: 10px; }
+  .tier-card { border-top: 3px solid var(--accent); }
+  .tier-card .spec-tag { margin-bottom: 10px; }
+
+  ol.steps, ul.checklist { margin: 0; padding-left: 0; list-style: none; display: grid; gap: 11px; }
   ol.steps li, ul.checklist li {
-    display: flex; gap: 12px; align-items: flex-start; color: var(--ink-2); font-size: 15px;
+    display: flex; gap: 12px; align-items: flex-start; color: var(--ink-2); font-size: 15.5px;
   }
   ol.steps { counter-reset: step; }
   ol.steps li::before {
     counter-increment: step; content: counter(step);
-    flex: none; width: 22px; height: 22px; border-radius: 50%;
-    background: var(--accent-wash); color: var(--accent); font-weight: 700; font-size: 12px;
-    display: flex; align-items: center; justify-content: center; margin-top: 2px;
+    font-family: "JetBrains Mono", monospace; font-weight: 700; font-size: 12px;
+    flex: none; width: 24px; height: 24px; border-radius: 4px;
+    background: var(--accent-soft); color: var(--accent);
+    display: flex; align-items: center; justify-content: center; margin-top: 1px;
   }
   ul.checklist li::before {
-    content: "✓"; flex: none; width: 22px; height: 22px; border-radius: 50%;
-    background: var(--accent-wash); color: var(--accent); font-weight: 700; font-size: 12px;
-    display: flex; align-items: center; justify-content: center; margin-top: 2px;
+    content: "✓"; font-family: "JetBrains Mono", monospace;
+    flex: none; width: 24px; height: 24px; border-radius: 4px;
+    background: var(--accent-soft); color: var(--accent); font-weight: 700; font-size: 12px;
+    display: flex; align-items: center; justify-content: center; margin-top: 1px;
   }
 
   .stat-row { display: grid; gap: 14px; grid-template-columns: repeat(3, 1fr); }
   @media (max-width: 640px) { .stat-row { grid-template-columns: 1fr; } }
-  .stat .num { font-size: 34px; font-weight: 700; line-height: 1; }
-  .stat .label { font-size: 13px; color: var(--ink-muted); margin-top: 4px; }
+  .stat .num { font-family: "JetBrains Mono", monospace; font-size: 32px; font-weight: 800; line-height: 1; color: var(--ink); font-variant-numeric: tabular-nums; }
+  .stat .label { font-family: "JetBrains Mono", monospace; font-size: 12px; color: var(--muted); margin-top: 6px; text-transform: uppercase; letter-spacing: 0.03em; }
 
-  .bars { display: grid; gap: 12px; }
-  .bar-row { display: grid; grid-template-columns: 150px 1fr 40px; gap: 10px; align-items: center; font-size: 14px; }
-  .bar-row .name { color: var(--ink-2); }
-  .bar-track { height: 10px; background: var(--grid); border-radius: 5px; overflow: hidden; }
-  .bar-fill { height: 100%; background: var(--accent); border-radius: 5px; }
-  .bar-row .val { text-align: right; color: var(--ink-muted); font-size: 13px; font-variant-numeric: tabular-nums; }
-  @media (max-width: 560px) {
-    .bar-row { grid-template-columns: 100px 1fr 34px; }
-  }
+  .bars { display: grid; gap: 13px; }
+  .bar-row { display: grid; grid-template-columns: 152px 1fr 42px; gap: 10px; align-items: center; font-size: 14px; }
+  .bar-row .name { color: var(--ink-2); font-family: "JetBrains Mono", monospace; font-size: 12.5px; }
+  .bar-track { height: 8px; background: var(--accent-soft); border-radius: 4px; overflow: hidden; }
+  .bar-fill { height: 100%; background: var(--accent); border-radius: 4px; }
+  .bar-row .val { text-align: right; color: var(--muted); font-size: 12.5px; font-family: "JetBrains Mono", monospace; font-variant-numeric: tabular-nums; }
+  @media (max-width: 560px) { .bar-row { grid-template-columns: 96px 1fr 34px; } }
 
   .note {
-    font-size: 14px; color: var(--ink-muted); border-left: 2px solid var(--border);
-    padding-left: 14px; margin-top: 18px;
+    font-size: 14px; color: var(--muted); border-left: 2px solid var(--border);
+    padding-left: 14px; margin-top: 20px; max-width: 62ch;
   }
+  .flag {
+    display: flex; gap: 12px; align-items: flex-start;
+    background: var(--warn-soft); border: 1px solid var(--border); border-radius: 8px;
+    padding: 16px 18px; margin-top: 20px;
+  }
+  .flag .glyph { font-family: "JetBrains Mono", monospace; color: var(--warn); font-weight: 800; flex: none; }
+  .flag p { color: var(--ink); max-width: none; font-size: 15px; margin: 0; }
 
-  footer { padding-block: 32px; }
-  footer .wrap { display: flex; flex-wrap: wrap; gap: 8px 18px; justify-content: space-between; color: var(--ink-muted); font-size: 13px; }
+  footer { padding-block: 34px; }
+  footer .wrap {
+    display: flex; flex-wrap: wrap; gap: 8px 20px; justify-content: space-between;
+    color: var(--muted); font-size: 12.5px; font-family: "JetBrains Mono", monospace;
+  }
 </style>
 </head>
 <body>
 
 <header class="top">
   <div class="wrap">
-    <div class="brand">CPOS</div>
+    <div class="brand"><span class="dot"></span>CPOS</div>
     <nav class="links">
-      <a href="#what">What it solves</a>
-      <a href="#files">The files</a>
+      <a href="#what">Problem</a>
+      <a href="#files">Files</a>
       <a href="#scoring">Scoring</a>
+      <a href="#models">Routing</a>
       <a href="#governance">Governance</a>
       <a href="#case-study">In practice</a>
     </nav>
@@ -175,7 +228,14 @@
   <section class="wrap">
     <p class="eyebrow">A governance system for AI-assisted work</p>
     <h1>CPOS — the Claude Project Operating System</h1>
-    <p class="lede">One standard, many projects. CPOS is how a single person keeps a growing pile of AI-assisted projects honest, current, and easy to pick back up — without re-explaining the same context to the AI every session, and without one project's fix quietly failing to reach its siblings.</p>
+    <p class="lede">One standard, many projects. CPOS is how a single person keeps a growing pile of AI-assisted projects honest, current, and easy to pick back up — without re-explaining the same context every session, and without one project's fix quietly failing to reach its siblings.</p>
+    <div class="readout mono">
+      <span><b>v2.1</b> current spec</span>
+      <span class="sep">·</span>
+      <span><b>9</b> projects governed</span>
+      <span class="sep">·</span>
+      <span><b>86%</b> avg. compliance</span>
+    </div>
   </section>
 
   <section class="wrap" id="what">
@@ -201,22 +261,22 @@
     <p>Every governed project carries the same small set of files. Nothing exotic — just enough structure that a new session (human or AI) can get oriented in under a minute, without reading the whole repository.</p>
     <div class="grid-2">
       <div class="card file-card">
-        <span class="tag">CLAUDE.md</span>
+        <span class="spec-tag">CLAUDE.md</span>
         <h3>Operating instructions</h3>
         <p>Deliberately thin. States the mission in a sentence or two, points to the standard for behavior, and lists only what's project-specific: startup files to read, hard rules, things never to do without approval.</p>
       </div>
       <div class="card file-card">
-        <span class="tag">PERSONA.md</span>
+        <span class="spec-tag">PERSONA.md</span>
         <h3>Who's advising</h3>
         <p>The expertise, voice, and judgment the AI should bring to this project — a growth strategist for a Shopify brand reads nothing like a curriculum designer for a coding course, even though both follow the same standard.</p>
       </div>
       <div class="card file-card">
-        <span class="tag">WORKSPACE.md</span>
+        <span class="spec-tag">WORKSPACE.md</span>
         <h3>Current state</h3>
         <p>What's done, what's in flight, what's blocked, and the next concrete step. Read first every session; updated at the end of any session that made real progress.</p>
       </div>
       <div class="card file-card">
-        <span class="tag">DECISIONS.md</span>
+        <span class="spec-tag">DECISIONS.md</span>
         <h3>Settled calls</h3>
         <p>Long-term decisions, recorded once. Future sessions respect them automatically instead of re-litigating the same trade-off every few weeks.</p>
       </div>
@@ -258,6 +318,29 @@
     <p class="note">A project can score 100% compliant with a completely empty repository — a scaffold with nothing in it yet passes every structural check. That's why sandbox and archived projects are registered but explicitly exempted from scoring, rather than given a number that would only measure emptiness.</p>
   </section>
 
+  <section class="wrap" id="models">
+    <h2>Routing the work itself</h2>
+    <p>CPOS doesn't just govern the projects — it governs which model does the thinking, on the theory that judgment, implementation, and grunt work aren't the same job and shouldn't cost the same:</p>
+    <div class="grid-3">
+      <div class="card tier-card">
+        <span class="spec-tag">Orchestrator</span>
+        <h3>Owns judgment</h3>
+        <p>Architecture, migrations, standards changes, planning — anything ambiguous, irreversible, or crossing project boundaries.</p>
+      </div>
+      <div class="card tier-card">
+        <span class="spec-tag">Implementation</span>
+        <h3>The workhorse</h3>
+        <p>Coding, documentation, drafting from an approved plan, routine audits against a rubric that's already defined.</p>
+      </div>
+      <div class="card tier-card">
+        <span class="spec-tag">Mechanical</span>
+        <h3>Fast &amp; cheap</h3>
+        <p>Formatting, extraction, copyedits, bulk edits from a fixed pattern — high-volume work with no judgment call in it.</p>
+      </div>
+    </div>
+    <p class="note">The point isn't cost-cutting for its own sake — it's that a rename across forty files doesn't need the same model as a decision about whether to re-migrate the whole workspace to a new standard.</p>
+  </section>
+
   <section class="wrap" id="governance">
     <h2>Governance has a rhythm, not just a rulebook</h2>
     <p>A standard nobody revisits calcifies. CPOS runs a recurring cycle so drift gets caught on a schedule, not by accident:</p>
@@ -269,7 +352,12 @@
       <li><strong>Write the report</strong> — one document, dated, that a future session (or a future person) can read to understand what changed and why.</li>
       <li><strong>Recommend what to invest in next</strong>, ranked by impact — not a list of everything that could be improved.</li>
     </ol>
-    <p>One more rule matters as much as the cycle itself: the governance layer never writes into a project while someone might be actively working in it. Before touching a project's files, it checks for recent activity — modified files, uncommitted changes it didn't make, a running process — and defers if anything looks live. Reads are always safe; writes wait for a quiet moment. Audits, in particular, are read-only by design — findings get written to the governance layer's own reports, never into the project being audited.</p>
+    <p style="margin-top:20px;">One more rule matters as much as the cycle itself: the governance layer never writes into a project while someone might be actively working in it. Before touching a project's files, it checks for recent activity — modified files, uncommitted changes it didn't make, a running process — and defers if anything looks live. Reads are always safe; writes wait for a quiet moment.</p>
+    <p>And when it does write, it stays in its lane: only governance files — CLAUDE.md, WORKSPACE.md, DECISIONS.md and the like — never a project's actual code or content. Audits in particular are read-only by design; findings land in the governance layer's own reports, never in the project being audited.</p>
+    <div class="flag">
+      <span class="glyph mono">!</span>
+      <p>One habit doesn't wait for the scheduled cycle at all: anything that looks like a secret gets flagged the moment it's seen, mid-task, regardless of what else is going on. It's the one governance rule designed to fire off-schedule on purpose — see below.</p>
+    </div>
   </section>
 
   <section class="wrap" id="case-study">
@@ -283,7 +371,7 @@
       </div>
       <div class="stat card">
         <div class="num">86%</div>
-        <div class="label">average compliance score</div>
+        <div class="label">avg. compliance score</div>
       </div>
       <div class="stat card">
         <div class="num">9 / 9</div>
@@ -291,7 +379,7 @@
       </div>
     </div>
 
-    <h3 style="margin-top:32px;">What the portfolio is made of</h3>
+    <h3 style="margin-top:34px;">What the portfolio is made of</h3>
     <div class="bars">
       <div class="bar-row"><span class="name">eCommerce brands</span><span class="bar-track"><span class="bar-fill" style="width:22.2%"></span></span><span class="val">2</span></div>
       <div class="bar-row"><span class="name">Mobile app + growth</span><span class="bar-track"><span class="bar-fill" style="width:22.2%"></span></span><span class="val">2</span></div>
@@ -302,7 +390,7 @@
       <div class="bar-row"><span class="name">Undefined, pending a call</span><span class="bar-track"><span class="bar-fill" style="width:11.1%"></span></span><span class="val">1</span></div>
     </div>
 
-    <h3 style="margin-top:32px;">Average health, by dimension (out of 10)</h3>
+    <h3 style="margin-top:34px;">Average health, by dimension (out of 10)</h3>
     <div class="bars">
       <div class="bar-row"><span class="name">Compliance</span><span class="bar-track"><span class="bar-fill" style="width:85.6%"></span></span><span class="val">8.6</span></div>
       <div class="bar-row"><span class="name">Documentation</span><span class="bar-track"><span class="bar-fill" style="width:74.4%"></span></span><span class="val">7.4</span></div>
@@ -311,8 +399,12 @@
       <div class="bar-row"><span class="name">Decision tracking</span><span class="bar-track"><span class="bar-fill" style="width:71.1%"></span></span><span class="val">7.1</span></div>
       <div class="bar-row"><span class="name">Outstanding tasks</span><span class="bar-track"><span class="bar-fill" style="width:66.7%"></span></span><span class="val">6.7</span></div>
     </div>
-
     <p class="note">These numbers are the actual average across the current portfolio, not a cherry-picked example. Outstanding tasks is the weakest dimension — a few projects are missing a clear next step, which is exactly the kind of thing a monthly audit exists to surface rather than let drift indefinitely.</p>
+
+    <div class="flag">
+      <span class="glyph mono">✓</span>
+      <p>The off-schedule habit above isn't theoretical either. This month, while doing unrelated setup work, it caught a credential sitting exposed in plaintext inside a project's git config — a leftover from a manual fix, weeks old, found the moment it came into view rather than at the next scheduled audit. The exposed reference was removed on the spot. The policy from here is simple: anything that's ever been exposed is treated as burned, so it still needs a person to actually revoke and reissue it — CPOS can flag that reliably; it can't do that last step for you.</p>
+    </div>
   </section>
 
 </main>
