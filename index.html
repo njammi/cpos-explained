@@ -1,0 +1,349 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CPOS — Claude Project Operating System</title>
+<meta name="description" content="CPOS is a governance system for running many AI-assisted projects at once, without losing consistency or re-learning the same lessons twice.">
+<style>
+  :root {
+    color-scheme: light;
+    --page:        #f9f9f7;
+    --surface:     #fcfcfb;
+    --ink:         #0b0b0b;
+    --ink-2:       #52514e;
+    --ink-muted:   #898781;
+    --grid:        #e1e0d9;
+    --border:      rgba(11,11,11,0.10);
+    --accent:      #2a78d6;
+    --accent-wash: #e9f1fb;
+    --good:        #0ca30c;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      color-scheme: dark;
+      --page:        #0d0d0d;
+      --surface:     #1a1a19;
+      --ink:         #ffffff;
+      --ink-2:       #c3c2b7;
+      --ink-muted:   #898781;
+      --grid:        #2c2c2a;
+      --border:      rgba(255,255,255,0.10);
+      --accent:      #3987e5;
+      --accent-wash: #142334;
+      --good:        #0ca30c;
+    }
+  }
+  :root[data-theme="dark"] {
+    color-scheme: dark;
+    --page:        #0d0d0d;
+    --surface:     #1a1a19;
+    --ink:         #ffffff;
+    --ink-2:       #c3c2b7;
+    --ink-muted:   #898781;
+    --grid:        #2c2c2a;
+    --border:      rgba(255,255,255,0.10);
+    --accent:      #3987e5;
+    --accent-wash: #142334;
+    --good:        #0ca30c;
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--page);
+    color: var(--ink);
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    line-height: 1.55;
+  }
+  img { max-width: 100%; }
+  a { color: var(--accent); }
+
+  .wrap { max-width: 880px; margin: 0 auto; padding-inline: 20px; }
+
+  header.top {
+    position: sticky; top: 0; z-index: 10;
+    background: color-mix(in srgb, var(--page) 88%, transparent);
+    backdrop-filter: blur(6px);
+    border-bottom: 1px solid var(--border);
+  }
+  header.top .wrap {
+    display: flex; align-items: center; justify-content: space-between;
+    padding-block: 14px;
+  }
+  .brand { font-weight: 700; letter-spacing: 0.02em; }
+  nav.links { display: flex; gap: 18px; font-size: 14px; }
+  nav.links a { color: var(--ink-2); text-decoration: none; }
+  nav.links a:hover { color: var(--ink); }
+  .theme-toggle {
+    border: 1px solid var(--border); background: var(--surface); color: var(--ink);
+    border-radius: 999px; width: 32px; height: 32px; cursor: pointer; font-size: 15px;
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  main { padding-bottom: 64px; }
+
+  section { padding-block: 56px; border-bottom: 1px solid var(--border); }
+  section:last-of-type { border-bottom: none; }
+
+  .eyebrow {
+    text-transform: uppercase; letter-spacing: 0.08em; font-size: 12px;
+    color: var(--ink-muted); font-weight: 600; margin: 0 0 10px;
+  }
+  h1 { font-size: clamp(28px, 5vw, 42px); line-height: 1.15; margin: 0 0 16px; }
+  h2 { font-size: clamp(22px, 3.5vw, 28px); margin: 0 0 12px; }
+  h3 { font-size: 17px; margin: 0 0 6px; }
+  p.lede { font-size: 18px; color: var(--ink-2); max-width: 640px; }
+  p { color: var(--ink-2); }
+  .stack { display: grid; gap: 14px; }
+
+  .card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 10px; padding: 18px 20px;
+  }
+  .grid-2 { display: grid; gap: 14px; grid-template-columns: repeat(2, 1fr); }
+  .grid-4 { display: grid; gap: 14px; grid-template-columns: repeat(4, 1fr); }
+  @media (max-width: 640px) {
+    .grid-2, .grid-4 { grid-template-columns: 1fr; }
+  }
+
+  .file-card .tag {
+    display: inline-block; font-family: ui-monospace, "SF Mono", Consolas, monospace;
+    font-size: 12px; color: var(--accent); background: var(--accent-wash);
+    padding: 3px 8px; border-radius: 5px; margin-bottom: 8px;
+  }
+
+  ol.steps, ul.checklist { margin: 0; padding-left: 0; list-style: none; display: grid; gap: 10px; }
+  ol.steps li, ul.checklist li {
+    display: flex; gap: 12px; align-items: flex-start; color: var(--ink-2); font-size: 15px;
+  }
+  ol.steps { counter-reset: step; }
+  ol.steps li::before {
+    counter-increment: step; content: counter(step);
+    flex: none; width: 22px; height: 22px; border-radius: 50%;
+    background: var(--accent-wash); color: var(--accent); font-weight: 700; font-size: 12px;
+    display: flex; align-items: center; justify-content: center; margin-top: 2px;
+  }
+  ul.checklist li::before {
+    content: "✓"; flex: none; width: 22px; height: 22px; border-radius: 50%;
+    background: var(--accent-wash); color: var(--accent); font-weight: 700; font-size: 12px;
+    display: flex; align-items: center; justify-content: center; margin-top: 2px;
+  }
+
+  .stat-row { display: grid; gap: 14px; grid-template-columns: repeat(3, 1fr); }
+  @media (max-width: 640px) { .stat-row { grid-template-columns: 1fr; } }
+  .stat .num { font-size: 34px; font-weight: 700; line-height: 1; }
+  .stat .label { font-size: 13px; color: var(--ink-muted); margin-top: 4px; }
+
+  .bars { display: grid; gap: 12px; }
+  .bar-row { display: grid; grid-template-columns: 150px 1fr 40px; gap: 10px; align-items: center; font-size: 14px; }
+  .bar-row .name { color: var(--ink-2); }
+  .bar-track { height: 10px; background: var(--grid); border-radius: 5px; overflow: hidden; }
+  .bar-fill { height: 100%; background: var(--accent); border-radius: 5px; }
+  .bar-row .val { text-align: right; color: var(--ink-muted); font-size: 13px; font-variant-numeric: tabular-nums; }
+  @media (max-width: 560px) {
+    .bar-row { grid-template-columns: 100px 1fr 34px; }
+  }
+
+  .note {
+    font-size: 14px; color: var(--ink-muted); border-left: 2px solid var(--border);
+    padding-left: 14px; margin-top: 18px;
+  }
+
+  footer { padding-block: 32px; }
+  footer .wrap { display: flex; flex-wrap: wrap; gap: 8px 18px; justify-content: space-between; color: var(--ink-muted); font-size: 13px; }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <div class="brand">CPOS</div>
+    <nav class="links">
+      <a href="#what">What it solves</a>
+      <a href="#files">The files</a>
+      <a href="#scoring">Scoring</a>
+      <a href="#governance">Governance</a>
+      <a href="#case-study">In practice</a>
+    </nav>
+    <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">◐</button>
+  </div>
+</header>
+
+<main>
+
+  <section class="wrap">
+    <p class="eyebrow">A governance system for AI-assisted work</p>
+    <h1>CPOS — the Claude Project Operating System</h1>
+    <p class="lede">One standard, many projects. CPOS is how a single person keeps a growing pile of AI-assisted projects honest, current, and easy to pick back up — without re-explaining the same context to the AI every session, and without one project's fix quietly failing to reach its siblings.</p>
+  </section>
+
+  <section class="wrap" id="what">
+    <h2>The problem it solves</h2>
+    <p>Running one AI-assisted project is easy. You talk to the AI, it remembers what you told it earlier in the conversation, and when the conversation ends, you remember the rest yourself.</p>
+    <p>The trouble starts around the third or fourth project. Each one has its own conventions, its own half-finished decisions, its own idea of what "done" looks like. A useful pattern discovered in one project never makes it to the others, because nothing carries it across. Documentation quietly goes stale in the projects you're not currently looking at. Six months later, nobody — human or AI — can say with confidence what state any given project is actually in.</p>
+    <p>CPOS treats that as a governance problem, not a documentation problem. It separates two roles that are easy to blur together:</p>
+    <div class="grid-2">
+      <div class="card">
+        <h3>The standard</h3>
+        <p>One canonical definition of how a project should be structured, documented, and scored. Lives in one place. Projects reference it — they never copy it.</p>
+      </div>
+      <div class="card">
+        <h3>The projects</h3>
+        <p>Each one owns its own content, decisions, and voice. The standard governs their <em>shape</em>, never their substance.</p>
+      </div>
+    </div>
+    <p class="note">A dedicated "Architect" repo holds the standard and audits every project against it. It owns no project's content — only the rules every project is measured by, and the standard itself is versioned, so it can improve without silently rewriting history.</p>
+  </section>
+
+  <section class="wrap" id="files">
+    <h2>The file model</h2>
+    <p>Every governed project carries the same small set of files. Nothing exotic — just enough structure that a new session (human or AI) can get oriented in under a minute, without reading the whole repository.</p>
+    <div class="grid-2">
+      <div class="card file-card">
+        <span class="tag">CLAUDE.md</span>
+        <h3>Operating instructions</h3>
+        <p>Deliberately thin. States the mission in a sentence or two, points to the standard for behavior, and lists only what's project-specific: startup files to read, hard rules, things never to do without approval.</p>
+      </div>
+      <div class="card file-card">
+        <span class="tag">PERSONA.md</span>
+        <h3>Who's advising</h3>
+        <p>The expertise, voice, and judgment the AI should bring to this project — a growth strategist for a Shopify brand reads nothing like a curriculum designer for a coding course, even though both follow the same standard.</p>
+      </div>
+      <div class="card file-card">
+        <span class="tag">WORKSPACE.md</span>
+        <h3>Current state</h3>
+        <p>What's done, what's in flight, what's blocked, and the next concrete step. Read first every session; updated at the end of any session that made real progress.</p>
+      </div>
+      <div class="card file-card">
+        <span class="tag">DECISIONS.md</span>
+        <h3>Settled calls</h3>
+        <p>Long-term decisions, recorded once. Future sessions respect them automatically instead of re-litigating the same trade-off every few weeks.</p>
+      </div>
+    </div>
+    <p class="note">Other files — TODO.md, ROADMAP.md, a memory log — get added only once a project's real work earns them. Nothing is scaffolded on the chance it might be useful someday.</p>
+  </section>
+
+  <section class="wrap" id="scoring">
+    <h2>Two ways of measuring health</h2>
+    <p>CPOS scores two different things, and it's worth keeping them apart. <strong>Compliance</strong> asks whether a project follows the standard's structure. <strong>Health</strong> asks whether the project is actually in good shape. A project can be perfectly compliant and still be stalled, undocumented in spirit, or drifting — compliance is necessary, not sufficient.</p>
+    <div class="grid-2">
+      <div class="card">
+        <h3>Compliance — 10 checks, 10% each</h3>
+        <ul class="checklist">
+          <li>CLAUDE.md exists and stays thin</li>
+          <li>No embedded copy of the standard itself</li>
+          <li>PERSONA.md defines a role that fits the project</li>
+          <li>WORKSPACE.md reflects current state (or genuinely has none yet)</li>
+          <li>DECISIONS.md exists once real decisions have been made</li>
+          <li>Clear next actions exist somewhere</li>
+          <li>The repository root is clean</li>
+          <li>Documentation matches reality on a spot check</li>
+          <li>No duplicated documentation</li>
+          <li>The project is registered and current in the index</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>Health — 6 dimensions, scored 0–10</h3>
+        <ul class="checklist">
+          <li>Documentation — coverage, accuracy, freshness</li>
+          <li>Repository organization — structure and root hygiene</li>
+          <li>Outstanding tasks — are next steps captured and current</li>
+          <li>Decision tracking — are decisions recorded and respected</li>
+          <li>Technical debt — inverse of accumulated shortcuts and drift</li>
+          <li>Compliance — the 10-check score above, folded in as one dimension</li>
+        </ul>
+      </div>
+    </div>
+    <p class="note">A project can score 100% compliant with a completely empty repository — a scaffold with nothing in it yet passes every structural check. That's why sandbox and archived projects are registered but explicitly exempted from scoring, rather than given a number that would only measure emptiness.</p>
+  </section>
+
+  <section class="wrap" id="governance">
+    <h2>Governance has a rhythm, not just a rulebook</h2>
+    <p>A standard nobody revisits calcifies. CPOS runs a recurring cycle so drift gets caught on a schedule, not by accident:</p>
+    <ol class="steps">
+      <li><strong>Discovery sweep</strong> — list the top-level folders that could contain a project, and flag anything real that isn't registered yet.</li>
+      <li><strong>Audit</strong> — score every registered project against the standard.</li>
+      <li><strong>Refresh health scores</strong> — update the six-dimension view for each project.</li>
+      <li><strong>Harvest lessons</strong> — review what's been learned since the last cycle, and decide what's proven enough to promote into the standard itself.</li>
+      <li><strong>Write the report</strong> — one document, dated, that a future session (or a future person) can read to understand what changed and why.</li>
+      <li><strong>Recommend what to invest in next</strong>, ranked by impact — not a list of everything that could be improved.</li>
+    </ol>
+    <p>One more rule matters as much as the cycle itself: the governance layer never writes into a project while someone might be actively working in it. Before touching a project's files, it checks for recent activity — modified files, uncommitted changes it didn't make, a running process — and defers if anything looks live. Reads are always safe; writes wait for a quiet moment. Audits, in particular, are read-only by design — findings get written to the governance layer's own reports, never into the project being audited.</p>
+  </section>
+
+  <section class="wrap" id="case-study">
+    <h2>In practice</h2>
+    <p>This isn't a hypothetical framework — it's running against a real, messy portfolio right now. The categories below are real; the project names aren't, since some of this is client and business work that stays private.</p>
+
+    <div class="stat-row">
+      <div class="stat card">
+        <div class="num">9</div>
+        <div class="label">registered projects</div>
+      </div>
+      <div class="stat card">
+        <div class="num">86%</div>
+        <div class="label">average compliance score</div>
+      </div>
+      <div class="stat card">
+        <div class="num">9 / 9</div>
+        <div class="label">on the current standard version</div>
+      </div>
+    </div>
+
+    <h3 style="margin-top:32px;">What the portfolio is made of</h3>
+    <div class="bars">
+      <div class="bar-row"><span class="name">eCommerce brands</span><span class="bar-track"><span class="bar-fill" style="width:22.2%"></span></span><span class="val">2</span></div>
+      <div class="bar-row"><span class="name">Mobile app + growth</span><span class="bar-track"><span class="bar-fill" style="width:22.2%"></span></span><span class="val">2</span></div>
+      <div class="bar-row"><span class="name">Education content</span><span class="bar-track"><span class="bar-fill" style="width:11.1%"></span></span><span class="val">1</span></div>
+      <div class="bar-row"><span class="name">Video/content brand</span><span class="bar-track"><span class="bar-fill" style="width:11.1%"></span></span><span class="val">1</span></div>
+      <div class="bar-row"><span class="name">Software in development</span><span class="bar-track"><span class="bar-fill" style="width:11.1%"></span></span><span class="val">1</span></div>
+      <div class="bar-row"><span class="name">Personal tool</span><span class="bar-track"><span class="bar-fill" style="width:11.1%"></span></span><span class="val">1</span></div>
+      <div class="bar-row"><span class="name">Undefined, pending a call</span><span class="bar-track"><span class="bar-fill" style="width:11.1%"></span></span><span class="val">1</span></div>
+    </div>
+
+    <h3 style="margin-top:32px;">Average health, by dimension (out of 10)</h3>
+    <div class="bars">
+      <div class="bar-row"><span class="name">Compliance</span><span class="bar-track"><span class="bar-fill" style="width:85.6%"></span></span><span class="val">8.6</span></div>
+      <div class="bar-row"><span class="name">Documentation</span><span class="bar-track"><span class="bar-fill" style="width:74.4%"></span></span><span class="val">7.4</span></div>
+      <div class="bar-row"><span class="name">Repo organization</span><span class="bar-track"><span class="bar-fill" style="width:73.3%"></span></span><span class="val">7.3</span></div>
+      <div class="bar-row"><span class="name">Technical debt</span><span class="bar-track"><span class="bar-fill" style="width:73.3%"></span></span><span class="val">7.3</span></div>
+      <div class="bar-row"><span class="name">Decision tracking</span><span class="bar-track"><span class="bar-fill" style="width:71.1%"></span></span><span class="val">7.1</span></div>
+      <div class="bar-row"><span class="name">Outstanding tasks</span><span class="bar-track"><span class="bar-fill" style="width:66.7%"></span></span><span class="val">6.7</span></div>
+    </div>
+
+    <p class="note">These numbers are the actual average across the current portfolio, not a cherry-picked example. Outstanding tasks is the weakest dimension — a few projects are missing a clear next step, which is exactly the kind of thing a monthly audit exists to surface rather than let drift indefinitely.</p>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>CPOS is a personal workflow standard, published as a plain explainer — not a product, a framework you install, or advice for anyone else's setup.</span>
+    <span>Written and maintained with Claude Code.</span>
+  </div>
+</footer>
+
+<script>
+  (function () {
+    var root = document.documentElement;
+    var btn = document.getElementById('themeToggle');
+    var stored = null;
+    try { stored = localStorage.getItem('cpos-theme'); } catch (e) {}
+    if (stored === 'light' || stored === 'dark') root.setAttribute('data-theme', stored);
+
+    function current() {
+      var attr = root.getAttribute('data-theme');
+      if (attr) return attr;
+      return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    }
+    btn.addEventListener('click', function () {
+      var next = current() === 'dark' ? 'light' : 'dark';
+      root.setAttribute('data-theme', next);
+      try { localStorage.setItem('cpos-theme', next); } catch (e) {}
+    });
+  })();
+</script>
+
+</body>
+</html>
